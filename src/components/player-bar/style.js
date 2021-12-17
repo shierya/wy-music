@@ -8,6 +8,17 @@ export const PlayerBarWarpper=styled.div`
   position: fixed;
   width: 100%;
   bottom:0;
+  .lyric{
+    position: absolute;
+    top:-50px;
+    left:50%;
+    transform: translateX(-50%);
+    background-color: rgba(100, 100, 100, 0.8);
+    line-height: 30px;
+    font-size: 16px;
+    padding: 0 15px;
+    color:#fff;
+  }
   .lock{
     width: 52px;
     height: 67px;

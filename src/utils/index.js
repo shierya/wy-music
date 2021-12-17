@@ -42,3 +42,20 @@ export function formatMinuteSecond(time) {
   return formatDate(time, "mm:ss");
 }
 
+export function formateLyric(lyric){
+  if(!lyric) return false
+  const list=lyric.split('\n')
+  const timeExp=/\[(\d{2}):(\d{2})\.(\d{2,3})\]/
+  const arr=[]
+  for(let item of list){
+    if(!item) continue
+    const result=timeExp.exec(item)
+    const time=result[1]*60*1000+result[2]*1000+result[3]*1
+    const content=item.replace(timeExp,'').trim()
+    arr.push({
+      time,
+      content
+    })
+  }
+  return arr
+}

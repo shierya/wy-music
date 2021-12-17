@@ -1,5 +1,6 @@
-import { CHANGE_PLAY_LIST,CHANGE_CURRENT_SONG_INDEX,CHANGE_CURRENT_SONG,CHANGE_PLAY_MODE } from "./contanst"
-import { getSongDetail } from '@/network/song';
+import { CHANGE_PLAY_LIST,CHANGE_CURRENT_SONG_INDEX,CHANGE_CURRENT_SONG,CHANGE_PLAY_MODE, CHANGE_LYRIC_LIST } from "./contanst"
+import { getSongDetail,getLyric } from '@/network/song';
+import { formateLyric } from "@/utils";
 
 export const changeCurrentSongAction=value=>({
   type:CHANGE_CURRENT_SONG,
@@ -21,6 +22,11 @@ export const changePlayModeAction=value=>({
   value
 })
 
+const changeLyricListAction=value=>({
+  type:CHANGE_LYRIC_LIST,
+  value
+})
+
 export const changeCurrentSong=(ids)=>{
   return (dispatch,getState)=>{
     const playList=getState().getIn(['song','playList'])
@@ -39,7 +45,9 @@ export const changeCurrentSong=(ids)=>{
       })
       
     }
-    
+    getLyric({id:ids}).then(res=>{
+      dispatch(changeLyricListAction(formateLyric(res.data.lrc.lyric)))
+    })
   }
 }
 
@@ -49,19 +57,20 @@ export const changeCurrentSongIndex=(tag)=>{
     const playList=getState().getIn(['song','playList'])
     const playMode=getState().getIn(['song','playMode'])
     const currentSongIndex=getState().getIn(['song','currentSongIndex'])
+    let newIndex;
     if(playMode===1){ 
       //随机播放
-      let  newIndex=Math.floor(Math.random()*playList.length)
-      dispatch(changeCurrentSongAction(playList[newIndex]))
-      dispatch(changeCurrentSongIndexAction(newIndex))
+      newIndex=Math.floor(Math.random()*playList.length)
     }else{
       //顺序播放
-      let newIndex=currentSongIndex+tag
+      newIndex=currentSongIndex+tag
       if(newIndex>playList.length-1) newIndex=0
       if(newIndex<0) newIndex=playList.length-1
-      dispatch(changeCurrentSongAction(playList[newIndex]))
-      dispatch(changeCurrentSongIndexAction(newIndex))
     }
-    
+    dispatch(changeCurrentSongAction(playList[newIndex]))
+    dispatch(changeCurrentSongIndexAction(newIndex))
+    getLyric({id:playList[newIndex].id}).then(res=>{
+      dispatch(changeLyricListAction(formateLyric(res.data.lrc.lyric)))
+    })
   }
 }

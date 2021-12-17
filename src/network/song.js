@@ -6,3 +6,10 @@ export function getSongDetail(params){
     params
   })
 }
+
+export function getLyric(params){
+  return request({
+    url:'/lyric',
+    params
+  })
+}

@@ -11,15 +11,18 @@ const PlayerBar = memo(() => {
   const [sliderValue,setSliderValue]=useState(0)
   const [isChange,setIsChange]=useState(false)
   const [isPlaying,setIsPlaying]=useState(false)
+  const [lyric,setLyric]=useState(0)
+  
+  
 
   const audioRef=useRef()
   //redux hooks
-  const {currentSong,playList,playMode}=useSelector(state=>({
+  const {currentSong,playList,playMode,lyricList}=useSelector(state=>({
     currentSong:state.getIn(['song','currentSong']),
     playList:state.getIn(['song','playList']),
-    playMode:state.getIn(['song','playMode'])
+    playMode:state.getIn(['song','playMode']),
+    lyricList:state.getIn(['song','lyricList']),
   }))
-
   const dispacth=useDispatch()
 
   useEffect(()=>{
@@ -49,10 +52,20 @@ const PlayerBar = memo(() => {
     if(newPlayMode>2)newPlayMode=0
     dispacth(changePlayModeAction(newPlayMode))
   }
+  const getContent=(currentTime)=>{
+    for(let i=0;i<lyricList.length;i++){      
+      if(currentTime<lyricList[i].time){
+        return lyricList[i-1]&&lyricList[i-1].content  
+      }else if(i===lyricList.length-1 && currentTime>lyricList[i].time){
+        return lyricList[i]&&lyricList[i].content  
+      }
+    }
+  }
   const getPlayTime=e=>{ 
     if(!isChange){
       setCurrentTime(e.target.currentTime*1000)
       setSliderValue((currentTime/currentSong.dt)*100)
+      setLyric(getContent(e.target.currentTime*1000))
     }
   }
   const playEnd=()=>{
@@ -64,6 +77,7 @@ const PlayerBar = memo(() => {
     }
     
   }
+
   //监听组件事件用useCallback，防止一直重新渲染
   const changeSlider=useCallback(value=>{
     setIsChange(true)
@@ -96,6 +110,7 @@ const PlayerBar = memo(() => {
                 value={sliderValue}
                 onChange={changeSlider}
                 onAfterChange={sliderAfterChange}
+                tipFormatter={()=>formatMinuteSecond(currentTime)}
               />
               <span>{formatMinuteSecond(currentTime)} / {formatMinuteSecond(currentSong.dt)}</span>
             </div>
@@ -112,6 +127,7 @@ const PlayerBar = memo(() => {
         <audio src='/' ref={audioRef} onTimeUpdate={getPlayTime} onEnded={playEnd}/>
       </div>
       <div className="lock sprite_playbar"><i className="sprite_playbar"></i></div>
+      <div className='lyric' >{lyric}</div>
     </PlayerBarWarpper>
   );
 });

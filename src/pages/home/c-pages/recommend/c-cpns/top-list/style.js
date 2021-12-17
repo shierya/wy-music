@@ -50,6 +50,7 @@ export const TopListWrapper=styled.div`
           line-height: 32px;
           position:relative ;
           .title{
+            display: flex;
             span{
               display: inline-block;
               width: 26px;

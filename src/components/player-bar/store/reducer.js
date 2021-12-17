@@ -1,9 +1,14 @@
 import {Map} from 'immutable'
-import { CHANGE_CURRENT_SONG_INDEX,CHANGE_PLAY_LIST,CHANGE_CURRENT_SONG,CHANGE_PLAY_MODE} from './contanst'
+import {CHANGE_CURRENT_SONG_INDEX,
+        CHANGE_PLAY_LIST,
+        CHANGE_CURRENT_SONG,
+        CHANGE_PLAY_MODE,
+        CHANGE_LYRIC_LIST} from './contanst'
 
 const initState=Map({
   currentSongIndex:0,
   currentSong:{},
+  lyricList:[],
   playMode:0,//0：顺序播放；1：随机播放；2：单曲循环
   playList:[
     {
@@ -239,6 +244,8 @@ function reducer(state=initState,action){
       return state.set('currentSongIndex',action.value)
     case CHANGE_PLAY_MODE:
         return state.set('playMode',action.value)
+    case CHANGE_LYRIC_LIST:
+        return state.set('lyricList',action.value)
     default:
       return state
   }
