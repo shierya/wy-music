@@ -1,0 +1,6 @@
+export const GET_BANNERS='GET_BANNERS'
+export const GET_HTO_RECOMMEND='GET_HTO_RECOMMEND'
+export const GET_ALBUMS="GET_ALBUMS"
+export const GET_UP_LIST='GET_UP_LIST'
+export const GET_NEW_LIST='GET_NEW_LIST'
+export const GET_ORIGIN_LIST='GET_ORIGIN_LIST'
