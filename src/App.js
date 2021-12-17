@@ -1,4 +1,4 @@
-import React, { memo} from 'react';
+import React, { memo,Suspense} from 'react';
 import { Provider } from 'react-redux';
 
 import {BrowserRouter} from 'react-router-dom'
@@ -13,12 +13,14 @@ import PlayerBar from '@/components/player-bar';
 const App = memo(() => {
   return (
     <Provider store={store}>
-      <BrowserRouter>
-        <WYHeader/>
-        {renderRoutes(routes)}
-        <WYFooter/>
-        <PlayerBar/>
-      </BrowserRouter>
+      <Suspense fallback={<div>loadding</div>}>
+        <BrowserRouter>
+          <WYHeader/>
+          {renderRoutes(routes)}
+          <WYFooter/>
+          <PlayerBar/>
+        </BrowserRouter>
+      </Suspense>
     </Provider>
   );
 });
